@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NPC Dialog Generator - AI-Powered Game Development Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <!-- Tutorial Modal -->
+    <div id="tutorialModal" class="modal show">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeTutorial()">×</button>
+            <h2>🎮 Welcome to NPC Dialog Generator!</h2>
+            
+            <div class="tutorial-section">
+                <h3>📖 What is it?</h3>
+                <p>This tool generates AI-powered NPC (Non-Player Character) dialogues for game developers. Like the townspeople in Witcher 3, each NPC will have unique and characteristic lines.</p>
+            </div>
+            
+            <div class="tutorial-section">
+                <h3>🎯 How to Use?</h3>
+                <ol>
+                    <li><strong>Scene Description:</strong> Describe your game scene in detail</li>
+                    <li><strong>NPC Character:</strong> Specify who is speaking (e.g., "her mother", "the merchant", "village elder")</li>
+                    <li><strong>Choose Style:</strong> Select the dialog style that fits your game</li>
+                    <li><strong>Generate Dialogues:</strong> AI will create 10 different NPC dialogues</li>
+                    <li><strong>Export & Use:</strong> Export in your preferred format for your game engine</li>
+                </ol>
+            </div>
+            
+            <div class="tutorial-section">
+                <h3>💡 Tips</h3>
+                <ul>
+                    <li>Detailed descriptions give better results</li>
+                    <li>Be specific about NPC relationships (e.g., "the girl's worried mother" not just "woman")</li>
+                    <li>Specify emotions (scared, happy, angry, etc.)</li>
+                    <li>Try different styles for variety</li>
+                    <li>Save your favorite dialogues</li>
+                    <li>NEW: Convert any dialogue to an interactive conversation!</li>
+                </ul>
+            </div>
+            
+            <button class="tutorial-start-btn" onclick="closeTutorial()">Start Creating!</button>
+        </div>
+    </div>
+    
+    <!-- Saved Scenes Sidebar -->
+    <div id="savedScenes" class="saved-scenes">
+        <h3>📚 Saved Scenes</h3>
+        <div id="savedScenesList"></div>
+    </div>
+    
+    <button id="helpBtn" class="help-button" onclick="showTutorial()">?</button>
+    <button id="savedBtn" class="saved-button" onclick="toggleSavedScenes()">📚</button>
+    
+    <main class="main-container">
+        <div class="app-container">
+            <header class="app-header">
+                <div class="logo">
+                    <span class="logo-icon">🎮</span>
+                    <h1>NPC Dialog Generator</h1>
+                </div>
+                <p class="subtitle">AI-powered dialogue generator for Game Development</p>
+            </header>
+
+            <section class="input-section">
+                <button class="templates-btn" onclick="showTemplates()">
+                    📋 Use Scene Template
+                </button>
+                
+                <form id="promptForm">
+                    <div class="form-group">
+                        <label for="promptInput">Scene Description</label>
+                        <div class="textarea-wrapper">
+                            <textarea 
+                                id="promptInput" 
+                                placeholder="Example: A dragon is attacking the village, people are panicking...&#10;Example 2: A fisherman trying to sell his fresh catch..."
+                                required
+                                rows="4"
+                            ></textarea>
+                            <div class="char-count">
+                                <span id="charCount">0</span>/500
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group npc-character-group">
+                        <label for="npcCharacterInput">NPC Character (Who is speaking?)</label>
+                        <div class="textarea-wrapper">
+                            <textarea 
+                                id="npcCharacterInput" 
+                                class="npc-character-textarea"
+                                placeholder="Examples: the girl's mother, village guard, injured soldier, merchant, little boy..."
+                                rows="2"
+                            ></textarea>
+                            <div class="char-count">
+                                <span id="npcCharCount">0</span>/100
+                            </div>
+                        </div>
+                        <div class="npc-examples">
+                            💡 Tip: Be specific! Instead of <span>"woman"</span>, try <span>"the girl's worried mother"</span> or <span>"elderly shopkeeper"</span>
+                        </div>
+                    </div>
+                    
+                    <div class="style-options">
+                        <label>Dialog Style</label>
+                        <div class="style-grid">
+                            <button type="button" class="style-btn active" data-style="mixed">
+                                🎭 Mixed
+                            </button>
+                            <button type="button" class="style-btn" data-style="medieval">
+                                ⚔️ Medieval
+                            </button>
+                            <button type="button" class="style-btn" data-style="modern">
+                                🏙️ Modern
+                            </button>
+                            <button type="button" class="style-btn" data-style="scifi">
+                                🚀 Sci-Fi
+                            </button>
+                            <button type="button" class="style-btn" data-style="horror">
+                                👻 Horror
+                            </button>
+                            <button type="button" class="style-btn" data-style="comedy">
+                                😄 Comedy
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="emotion-options">
+                        <label>Primary Emotion</label>
+                        <select id="emotionSelect" class="emotion-select">
+                            <option value="">Auto-detect from scene</option>
+                            <option value="fearful">😨 Fearful</option>
+                            <option value="angry">😠 Angry</option>
+                            <option value="happy">😊 Happy</option>
+                            <option value="sad">😢 Sad</option>
+                            <option value="surprised">😲 Surprised</option>
+                            <option value="neutral">😐 Neutral</option>
+                        </select>
+                    </div>
+
+                    <div class="advanced-options">
+                        <details>
+                            <summary>⚙️ Advanced Options</summary>
+                            <div class="advanced-content">
+                                <label>
+                                    <input type="checkbox" id="includeActions" checked> 
+                                    Include actions (*walks away*, *sighs*, etc.)
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="includeNames" checked> 
+                                    Include NPC addressing (Stranger, Friend, etc.)
+                                </label>
+                                <label>
+                                    Dialog Length:
+                                    <input type="range" id="lengthRange" min="1" max="3" value="2">
+                                    <span id="lengthLabel">Medium</span>
+                                </label>
+                            </div>
+                        </details>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" id="generateBtn" class="generate-btn">
+                            <span class="btn-text">Generate NPC Dialogues</span>
+                            <span class="btn-icon">✨</span>
+                        </button>
+                        
+                        <button type="button" id="generateImageBtn" class="generate-image-btn">
+                            <span class="btn-text">Create Scene Image</span>
+                            <span class="btn-icon">🎨</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="imageSection" class="image-section" style="display: none;">
+                <div class="image-container">
+                    <h3>Generated Scene Visual</h3>
+                    <div id="imageLoading" class="loading-container" style="display:none;">
+                        <div class="loading-spinner"></div>
+                        <p>Creating image...</p>
+                    </div>
+                    <img id="generatedImage" class="generated-image" style="display:none;" />
+                </div>
+            </section>
+
+            <section id="resultsSection" class="results-section" style="display: none;">
+                <div class="results-header">
+                    <h2>Generated NPC Dialogues</h2>
+                    <div class="header-buttons">
+                        <button id="copyAllBtn" class="copy-all-btn">
+                            📋 Copy All
+                        </button>
+                        <button id="saveSceneBtn" class="save-scene-btn" onclick="saveScene()">
+                            💾 Save Scene
+                        </button>
+                        <div class="export-buttons">
+                            <button onclick="exportAsJSON()" class="export-btn" title="Export as JSON">
+                                <span>📄 JSON</span>
+                            </button>
+                            <button onclick="exportAsCSV()" class="export-btn" title="Export as CSV">
+                                <span>📊 CSV</span>
+                            </button>
+                            <button onclick="exportForUnity()" class="export-btn" title="Export for Unity">
+                                <span>🎮 Unity</span>
+                            </button>
+                            <button onclick="exportForUnreal()" class="export-btn" title="Export for Unreal">
+                                <span>🎯 Unreal</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="loading" class="loading-container" style="display:none;">
+                    <div class="loading-spinner"></div>
+                    <p>AI is generating dialogues...</p>
+                </div>
+                
+                <div id="responses" class="responses-grid"></div>
+            </section>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Templates Modal -->
+    <div id="templatesModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeTemplates()">×</button>
+            <h2>📋 Scene Templates</h2>
+            <div id="templatesList" class="templates-list"></div>
+        </div>
+    </div>
+
+    <!-- Dialog Modal -->
+    <div id="dialogModal" class="dialog-modal">
+        <div class="dialog-container">
+            <div class="dialog-header-bar">
+                <h2 class="dialog-title">
+                    <span>💬</span>
+                    Interactive Dialog Mode
+                </h2>
+                <button class="dialog-close-btn" onclick="closeDialogMode()">×</button>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="dialog-tabs">
+                <button class="dialog-tab active" onclick="switchDialogTab('conversation')">
+                    💬 Conversation
+                </button>
+                <button class="dialog-tab" onclick="switchDialogTab('images')">
+                    🎨 Generated Images
+                    <span class="tab-badge" id="imageCountBadge" style="display: none;">0</span>
+                </button>
+            </div>
+            
+            <!-- Tab Contents -->
+            <div class="dialog-tab-contents">
+                <!-- Conversation Tab -->
+                <div id="conversationTab" class="dialog-tab-content active">
+                    <div class="dialog-content">
+                        <div class="dialog-history" id="dialogHistory">
+                            <!-- Dialog messages will appear here -->
+                        </div>
+                        
+                        <div class="dialog-input-area">
+                            <!-- Image generation button -->
+                            <div class="dialog-image-section">
+                                <button type="button" class="dialog-generate-image-btn" onclick="generateDialogImage()">
+                                    <span class="btn-text">Create Scene Image</span>
+                                    <span class="btn-icon">🎨</span>
+                                </button>
+                            </div>
+                            
+                            <form id="dialogForm" class="dialog-form">
+                                <!-- Scene update area -->
+                                <div class="dialog-scene-update">
+                                    <label for="dialogSceneUpdate">
+                                        <span>🎬 Scene Update (Optional)</span>
+                                        <button type="button" class="scene-toggle-btn" onclick="toggleSceneUpdate()">
+                                            <span class="toggle-icon">➕</span>
+                                        </button>
+                                    </label>
+                                    <textarea 
+                                        id="dialogSceneUpdate" 
+                                        class="dialog-scene-textarea"
+                                        placeholder="e.g., The dragon left the girl and turned towards the merchant on the road..."
+                                        rows="3"
+                                        style="display: none;"
+                                    ></textarea>
+                                </div>
+                                
+                                <div class="dialog-inputs-row">
+                                    <div class="dialog-input-group">
+                                        <label for="dialogNpcInput">Next Speaker (NPC Character)</label>
+                                        <input 
+                                            type="text" 
+                                            id="dialogNpcInput" 
+                                            class="dialog-npc-input"
+                                            placeholder="e.g., village guard, merchant, the girl's father..."
+                                            required
+                                        >
+                                    </div>
+                                    
+                                    <div class="dialog-input-group">
+                                        <label for="dialogEmotionSelect">Emotion</label>
+                                        <select id="dialogEmotionSelect" class="dialog-emotion-select">
+                                            <option value="">Auto</option>
+                                            <option value="fearful">😨 Fearful</option>
+                                            <option value="angry">😠 Angry</option>
+                                            <option value="happy">😊 Happy</option>
+                                            <option value="sad">😢 Sad</option>
+                                            <option value="surprised">😲 Surprised</option>
+                                            <option value="neutral">😐 Neutral</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="dialog-generate-btn">
+                                    <span>Generate Response</span>
+                                    <span>🎭</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Images Tab -->
+                <div id="imagesTab" class="dialog-tab-content">
+                    <div class="dialog-images-container">
+                        <div id="dialogImagesList" class="dialog-images-list">
+                            <!-- Generated images will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dialog-actions">
+                <button onclick="exportDialog('text')" class="dialog-export-btn">
+                    📝 Export as Text
+                </button>
+                <button onclick="exportDialog('json')" class="dialog-export-btn">
+                    📄 Export as JSON
+                </button>
+                <button onclick="exportDialogImages()" class="dialog-export-btn" id="exportImagesBtn" style="display: none;">
+                    🎨 Export Images Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
