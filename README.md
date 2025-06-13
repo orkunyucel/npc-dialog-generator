@@ -179,16 +179,10 @@ A: Currently supports English, but you can specify other languages in your promp
 **Q: Do I need coding knowledge?**  
 A: No coding knowledge required! The interface is designed for everyone.
 
-## Support
-
-Having issues or questions?
-- Check the [Technical Documentation](README_TECHNICAL.md)
-- Report bugs on [GitHub Issues](https://github.com/yourusername/npc-dialog-generator/issues)
-- Join our [Discord Community](https://discord.gg/yourdiscord)
 
 ## Credits
 
-Created with love for game developers by [Your Name]
+Created with love for game developers by Orkun Kağan Yücel
 
 Powered by:
 - Google Gemini AI for dialogue generation
