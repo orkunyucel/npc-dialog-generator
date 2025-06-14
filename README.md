@@ -61,7 +61,7 @@ Think of it as a creative assistant that understands your game's context and gen
    ```
 
 5. **Open your browser**
-   - Go to `http://localhost:5000`
+   - Go to `http://localhost:5000` or the given adress in the terminal.
    - Start creating dialogues!
 
 ### Getting a Google Gemini API Key
