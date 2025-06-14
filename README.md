@@ -48,7 +48,7 @@ Think of it as a creative assistant that understands your game's context and gen
    ```
 
 3. **Set up your API key**
-   - Create a `.env` file in the project folder
+   - Create a `.env` file in the project folder (creating in any IDE is the fastest)
    - Add your Google Gemini API key:
      ```
      GEMINI_API_KEY=your_api_key_here
