@@ -40,6 +40,7 @@ Think of it as a creative assistant that understands your game's context and gen
    ```
    git clone https://github.com/yourusername/npc-dialog-generator.git
    cd npc-dialog-generator
+   cd app
    ```
 
 2. **Install Python dependencies**
@@ -57,7 +58,7 @@ Think of it as a creative assistant that understands your game's context and gen
 
 4. **Run the application**
    ```
-   python app.py
+   python main.py
    ```
 
 5. **Open your browser**
