@@ -38,7 +38,7 @@ Think of it as a creative assistant that understands your game's context and gen
 
 1. **Download the project**
    ```
-   git clone https://github.com/yourusername/npc-dialog-generator.git
+   git clone https://github.com/orkunyucel/npc-dialog-generator.git
    cd npc-dialog-generator
    ```
 
