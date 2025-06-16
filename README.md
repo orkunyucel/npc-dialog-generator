@@ -48,6 +48,7 @@ Think of it as a creative assistant that understands your game's context and gen
    ```
 
 3. **Set up your API key**
+   - Open cloned repo in any IDE (VS-Code recommended)
    - Create a `.env` file in the project folder (creating in any IDE is the fastest)
    - Add your Google Gemini API key:
      ```
@@ -55,12 +56,12 @@ Think of it as a creative assistant that understands your game's context and gen
      SECRET_KEY=any_random_string_here
      ```
 
-4. **Run the application**
+5. **Run the application**
    ```
    python main.py
    ```
 
-5. **Open your browser**
+6. **Open your browser**
    - Go to `http://localhost:5000` or the given adress in the terminal.
    - Start creating dialogues!
 
